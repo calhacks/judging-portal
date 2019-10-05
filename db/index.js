@@ -1,14 +1,15 @@
-console.log("db index.js");
+console.log('db index.js')
 
-const { Pool } = require('pg');
+const { Pool } = require('pg')
 
-require('dotenv').config();
+require('dotenv').config()
 
 const connectionString = process.env.DATABASE_URL
 const pool = new Pool({
-  connectionString: connectionString,
+	ssl: true,
+	connectionString: connectionString
 })
 
 module.exports = {
-  query: (text, params, callback) => pool.query(text, params, callback)
-};
+	query: (text, params, callback) => pool.query(text, params, callback)
+}
