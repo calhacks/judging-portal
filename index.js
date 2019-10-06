@@ -52,6 +52,11 @@ app.post('/api/authenticate', async (req, res) => {
 	res.status(401).end()
 })
 
+app.get('/api/authenticate', async (req, res) => {
+	if (req.session.authenticated) return res.status(200).end()
+	res.status(401).end()
+})
+
 app.post('/api/apis', async (req, res) => {
 	await db.query('DELETE FROM apis;')
 	const { apis } = req.body
