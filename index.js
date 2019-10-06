@@ -5,11 +5,15 @@ const session = require('express-session')
 const pgSession = require('connect-pg-simple')(session)
 const Router = require('express-promise-router')
 const path = require('path')
-var bodyParser = require('body-parser')
+const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 const db = require('./db/index')
 
 const app = express()
 const cors = require('cors')
+
+app.use(cookieParser())
+app.set('trust proxy', 1)
 
 app.use(
 	session({
