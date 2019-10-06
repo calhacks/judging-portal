@@ -17,7 +17,7 @@ class Home extends Component {
   }
 
   async componentWillMount() {
-    let res = await fetch('/api/authenticate');
+    let res = await fetch('/api/authenticate', { credentials: 'include' });
     if (res.status === 200) this.setState({ authenticated: true });
   }
 
@@ -44,7 +44,8 @@ class Home extends Component {
       },
       body: JSON.stringify({
         password: this.state.password
-      })
+      }),
+      credentials: 'include'
     });
 
     if (res.status === 200) this.setState({ authenticated: true });

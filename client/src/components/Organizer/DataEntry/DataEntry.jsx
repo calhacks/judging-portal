@@ -36,14 +36,14 @@ class DataEntry extends Component {
           waveNum: '',
           tableCSVName: 'UPLOAD FILE',
           projectCSVName: 'UPLOAD FILE'
-        })
+        });
       } else {
-          this.setState({
-            tableNum: result[0].tables,
-            waveNum: result[0].waves,
-            tableCSVName: result[0].tablesname,
-            projectCSVName: result[0].projectsname
-          })
+        this.setState({
+          tableNum: result[0].tables,
+          waveNum: result[0].waves,
+          tableCSVName: result[0].tablesname,
+          projectCSVName: result[0].projectsname
+        });
       }
     });
   }
@@ -56,7 +56,7 @@ class DataEntry extends Component {
     }
     this.setState({
       tableCSVName: fileName
-    })
+    });
   }
 
   handleProjectsFileUpload(event) {
@@ -69,7 +69,7 @@ class DataEntry extends Component {
     fileReader.readAsText(file);
     this.setState({
       projectsReader: fileReader
-    })
+    });
   }
 
   changeProjectsFileName(event) {
@@ -80,14 +80,14 @@ class DataEntry extends Component {
     }
     this.setState({
       projectCSVName: fileName
-    })
+    });
   }
 
   postProjectsAPIS() {
     if (this.state.projectCSVName === 'UPLOAD FILE') {
       this.setState({
         projectCSVName: ''
-      })
+      });
     }
 
     let results;
@@ -111,7 +111,7 @@ class DataEntry extends Component {
             if (value !== 'FALSE') {
               categories.push(key);
             }
-            if(!apiRaw.includes(key)) {
+            if (!apiRaw.includes(key)) {
               apiRaw.push(key);
             }
           }
@@ -123,7 +123,7 @@ class DataEntry extends Component {
 
     let apiFinal = [];
     for (let i = 0; i < apiRaw.length; i++) {
-      if(apiRaw[i].substring(0, 3) === 'API') {
+      if (apiRaw[i].substring(0, 3) === 'API') {
         apiFinal.push(['API', apiRaw[i]]);
       } else {
         apiFinal.push(['GC', apiRaw[i]]);
@@ -137,8 +137,9 @@ class DataEntry extends Component {
       },
       body: JSON.stringify({
         projectCSV: list
-      })
-    })
+      }),
+      credentials: 'include'
+    });
 
     const resAPIS = fetch('/api/apis', {
       method: 'POST',
@@ -147,18 +148,19 @@ class DataEntry extends Component {
       },
       body: JSON.stringify({
         apis: apiFinal
-      })
-    })
+      }),
+      credentials: 'include'
+    });
 
     return [length, Promise.all([resProjects, resAPIS])];
   }
 
   async getProjects() {
     try {
-      const res = await fetch('api/projects');
+      const res = await fetch('api/projects', { credentials: 'include' });
       const resJson = res.json();
       return resJson;
-    } catch(error) {
+    } catch (error) {
       console.log(error.stack);
     }
   }
@@ -173,7 +175,7 @@ class DataEntry extends Component {
     fileReader.readAsText(file);
     this.setState({
       tablesReader: fileReader
-    })
+    });
   }
 
   handleWave(event) {
@@ -192,7 +194,7 @@ class DataEntry extends Component {
     if (this.state.tableCSVName === 'UPLOAD FILE') {
       this.setState({
         tableCSVName: ''
-      })
+      });
     }
 
     let results;
@@ -221,15 +223,22 @@ class DataEntry extends Component {
   }
 
   routeToNext() {
-    if (this.state.tableNum !== '' && this.state.waveNum !== '' && this.state.tableCSVName !== 'UPLOAD FILE') {
-      const [ projectLength, projectsPromise ] = this.postProjectsAPIS();
+    if (
+      this.state.tableNum !== '' &&
+      this.state.waveNum !== '' &&
+      this.state.tableCSVName !== 'UPLOAD FILE'
+    ) {
+      const [projectLength, projectsPromise] = this.postProjectsAPIS();
       projectsPromise.then(() => {
         const tableLength = this.postTables(projectLength);
-        if (this.state.tableNum * tableLength * this.state.waveNum < projectLength) {
+        if (
+          this.state.tableNum * tableLength * this.state.waveNum <
+          projectLength
+        ) {
           alert('error: not enough capacity');
         }
         this.props.history.push('/judge-info');
-      })
+      });
     }
   }
 
@@ -238,8 +247,10 @@ class DataEntry extends Component {
       <div className="page-background" id="DataEntry">
         <div className="page-header">
           <div className="home-nav">
-            <img className="home-icon" src={Home} alt="home icon"/>
-            <Link className="home-label" to='/navigation'>HOME</Link>
+            <img className="home-icon" src={Home} alt="home icon" />
+            <Link className="home-label" to="/navigation">
+              HOME
+            </Link>
           </div>
           DATA ENTRY
         </div>
@@ -274,7 +285,9 @@ class DataEntry extends Component {
                 onChange={this.handleTablesFileUpload}
                 className="upload-file"
               />
-              <label htmlFor="tables-file" id="tables-file">{this.state.tableCSVName}</label>
+              <label htmlFor="tables-file" id="tables-file">
+                {this.state.tableCSVName}
+              </label>
             </div>
 
             <div className="data-entry-element">
@@ -285,12 +298,20 @@ class DataEntry extends Component {
                 onChange={this.handleProjectsFileUpload}
                 className="upload-file"
               />
-              <label htmlFor="projects-file" id="projects-file" >{this.state.projectCSVName}</label>
+              <label htmlFor="projects-file" id="projects-file">
+                {this.state.projectCSVName}
+              </label>
             </div>
           </div>
-          <div className= "links data">
-              <Link className="next-judge" to='/judge-info' onClick={this.routeToNext}>JUDGE INFO ></Link>
-            </div>
+          <div className="links data">
+            <Link
+              className="next-judge"
+              to="/judge-info"
+              onClick={this.routeToNext}
+            >
+              JUDGE INFO >
+            </Link>
+          </div>
         </div>
       </div>
     );

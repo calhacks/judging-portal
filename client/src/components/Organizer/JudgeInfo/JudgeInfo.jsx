@@ -34,18 +34,18 @@ class JudgeInfo extends Component {
         if (result != null) {
           let i;
           let judgeinfo = [];
-          for (i = 0; i < result.length; i++) { 
+          for (i = 0; i < result.length; i++) {
             judgeinfo[i] = [result[i].name, result[i].api];
           }
           this.setState({ info: judgeinfo });
         }
-        
+
         this.getAPI().then(result => {
           if (result != null) {
             let i;
             const apis = [];
-            for (i = 0; i < result.length; i++) { 
-              if(result[i].type !== "GC") {
+            for (i = 0; i < result.length; i++) {
+              if (result[i].type !== 'GC') {
                 apis.push(result[i].name);
               }
             }
@@ -57,44 +57,43 @@ class JudgeInfo extends Component {
     } catch (error) {
       console.log(error);
     }
-    
   }
 
   async getJudgeInfo() {
     try {
-      const res = await fetch('/api/judgeinfo');
+      const res = await fetch('/api/judgeinfo', { credentials: 'include' });
       const resJson = res.json();
       return resJson;
     } catch (error) {
-      console.log(error.stack)
+      console.log(error.stack);
     }
   }
 
   async getAPI() {
-      const res = await fetch(`/api/apis`);
-      const resJson = res.json();
-      return resJson;
+    const res = await fetch(`/api/apis`, { credentials: 'include' });
+    const resJson = res.json();
+    return resJson;
   }
 
   _onSelect(option) {
     this.setState({ selected: option });
   }
 
-  handleClickIndex(index, event){
-    this[event.target.name].bind(this)(index, event)
+  handleClickIndex(index, event) {
+    this[event.target.name].bind(this)(index, event);
   }
 
   async removeTask(index) {
-    await this.setState((prevState) => {
+    await this.setState(prevState => {
       const delInfo = prevState.info.slice();
       const judge = delInfo[index];
 
-      delInfo.splice(index, 1)
+      delInfo.splice(index, 1);
       return {
         info: delInfo,
         deleted: judge,
         reassignJudges: true
-      } 
+      };
     });
 
     try {
@@ -105,13 +104,13 @@ class JudgeInfo extends Component {
         },
         body: JSON.stringify({
           deleted: this.state.deleted
-        })
+        }),
+        credentials: 'include'
       });
       const resJson = res.json();
       return resJson;
-
     } catch (error) {
-      console.log("error");
+      console.log('error');
     }
   }
 
@@ -122,19 +121,19 @@ class JudgeInfo extends Component {
   }
 
   addInfo() {
-      if (this.state.currName !== '' && this.state.selected !== '') {
-        this.setState((prevState) => {
-          const newInfo = prevState.info.concat([
-            [prevState.currName, prevState.selected.label]
-          ])
-          return {
-            reassignJudges: true, 
-            info: newInfo,
-            currName: '',
-            selected: ''
-        }
-        });
-      }
+    if (this.state.currName !== '' && this.state.selected !== '') {
+      this.setState(prevState => {
+        const newInfo = prevState.info.concat([
+          [prevState.currName, prevState.selected.label]
+        ]);
+        return {
+          reassignJudges: true,
+          info: newInfo,
+          currName: '',
+          selected: ''
+        };
+      });
+    }
   }
 
   async postJudge() {
@@ -146,8 +145,9 @@ class JudgeInfo extends Component {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            info: [this.state.currName, this.state.selected.label],
-          })
+            info: [this.state.currName, this.state.selected.label]
+          }),
+          credentials: 'include'
         });
         const resJson = res.json();
         return resJson;
@@ -155,12 +155,12 @@ class JudgeInfo extends Component {
         alert('error: please enter both a judge name and api!');
       }
     } catch (error) {
-      console.log("error");
+      console.log('error');
     }
   }
 
   routeToPrev() {
-    const path = "/data-entry";
+    const path = '/data-entry';
     this.props.history.push(path);
   }
 
@@ -168,22 +168,23 @@ class JudgeInfo extends Component {
     try {
       await fetch('/api/assignjudges', {
         method: 'POST',
+        credentials: 'include'
       });
       return;
     } catch (error) {
-      console.log("error");
+      console.log('error');
     }
   }
 
   routeToNext() {
-    if (this.allAPIsSelected()) {  
+    if (this.allAPIsSelected()) {
       if (this.state.reassignJudges) {
         this.assignJudges();
       }
-      const path = "/hacker-spreadsheet";
+      const path = '/hacker-spreadsheet';
       this.props.history.push(path);
     } else {
-      alert("Not all categories have been matched to a judge!");
+      alert('Not all categories have been matched to a judge!');
     }
   }
 
@@ -197,43 +198,47 @@ class JudgeInfo extends Component {
     return false;
   }
 
-   allAPIsSelected() {
+  allAPIsSelected() {
     for (var i = 0; i < this.state.options.length; i++) {
       if (!this.containsAPI(this.state.options[i])) {
         return false;
       }
     }
-    return true
+    return true;
   }
 
   render() {
     const defaultOption = this.state.selected;
-    const info = (this.state.info||[]).map((name,index) => (
+    const info = (this.state.info || []).map((name, index) => (
       <ul className="judge-item">
         <div className="delete-button">
-          <button name="removeTask" type="submit" className="delete-button" onClick={event=>this.handleClickIndex(index,event)}>
-              ×
+          <button
+            name="removeTask"
+            type="submit"
+            className="delete-button"
+            onClick={event => this.handleClickIndex(index, event)}
+          >
+            ×
           </button>
         </div>
-         <Judge
-          name={name[0]}
-          api={this.state.info[index][1]}
-        />
+        <Judge name={name[0]} api={this.state.info[index][1]} />
       </ul>
-    ))
+    ));
 
     return (
-      <div className="page-background" id= "JudgeInfo">
+      <div className="page-background" id="JudgeInfo">
         <div className="page-header">
           <div className="home-nav">
-            <img className="home-icon" src={Home} alt="home icon"/>
-            <Link className="home-label" to='/navigation'>HOME</Link>
+            <img className="home-icon" src={Home} alt="home icon" />
+            <Link className="home-label" to="/navigation">
+              HOME
+            </Link>
           </div>
-        JUDGE INFORMATION</div>
+          JUDGE INFORMATION
+        </div>
         <div className="content-background">
           <div className="judge-input-list">
             <div className="judge-input">
-
               <div className="judge-name-title">JUDGE NAME</div>
               <input
                 className="judge-name-input"
@@ -256,7 +261,10 @@ class JudgeInfo extends Component {
               <button
                 className="button"
                 type="button"
-                onClick={() => { this.addInfo(); this.postJudge();}}
+                onClick={() => {
+                  this.addInfo();
+                  this.postJudge();
+                }}
               >
                 SUBMIT
               </button>
@@ -271,9 +279,21 @@ class JudgeInfo extends Component {
             </div>
           </div>
 
-          <div className= "links judgeinfo">
-            <Link className="nav prev" to='/data-entry' onClick={this.routeToPrev}>&#60; DATA ENTRY</Link>
-            <Link className="nav next" to='/project-breakdown' onClick={this.routeToNext}>SCORING BREAKDOWN ></Link>
+          <div className="links judgeinfo">
+            <Link
+              className="nav prev"
+              to="/data-entry"
+              onClick={this.routeToPrev}
+            >
+              &#60; DATA ENTRY
+            </Link>
+            <Link
+              className="nav next"
+              to="/project-breakdown"
+              onClick={this.routeToNext}
+            >
+              SCORING BREAKDOWN >
+            </Link>
           </div>
         </div>
       </div>
