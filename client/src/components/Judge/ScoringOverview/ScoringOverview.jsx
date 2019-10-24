@@ -75,7 +75,7 @@ class ScoringOverview extends Component {
           </div>
         </div>
         <ul>
-          {this.state.renderedList.map((item, index) => (
+          {this.state.renderedList.sort((a, b) => a.wave - b.wave).map((item, index) => (
             <Link
               style={{ textDecoration: 'none', color: '#0A7191' }}
               to={{
@@ -96,6 +96,7 @@ class ScoringOverview extends Component {
                 key={index}
                 name={item.name}
                 identification={item.projectid}
+                wave={item.wave}
               />
             </Link>
           ))}

@@ -8,7 +8,7 @@ class Project extends Component {
             <div className="projectcmp">
                 <div className="project-text">
                     <h3>{this.props.name}</h3>
-                    <p>ID: {this.props.identification}</p>
+                    <p>Wave: {this.props.wave} ID: {this.props.identification}</p>
                 </div>
             </div>
         );
