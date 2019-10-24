@@ -193,6 +193,7 @@ class ProjectBreakdown extends Component {
     for (let i = 0; i < this.state.keys.length; i += 1) {
       apiCategories.push(
         <APICategory
+          key={keys[i]}
           button={this.state.buttons[i]}
           index={i}
           flipButtonUp={this.flipButtonUp}

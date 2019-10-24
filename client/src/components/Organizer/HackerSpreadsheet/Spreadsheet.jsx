@@ -56,7 +56,7 @@ class Spreadsheet extends Component {
 
   render() {
     const projectEntries = (this.state.projects || []).map(item => (
-      <ul className="spread-entry">
+      <ul key={item.name} className="spread-entry">
         <SpreadEntry name={item.name} wave={item.wave} table={item.tablename} />
       </ul>
     ));
@@ -69,7 +69,7 @@ class Spreadsheet extends Component {
               HOME
             </Link>
           </div>
-          HACKER FACING SPREADSHEET
+          HACKER SPREADSHEET
         </div>
         <div className="content-background">
           <div className="content-spreadsheet">

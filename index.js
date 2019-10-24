@@ -308,7 +308,6 @@ app.post('/api/assignjudges', async (req, res) => {
 		const apisJSON = apis.rows
 
 		let apiMappings = getApiMapping(apisJSON, judgeJSON)
-
 		//now we match
 		let i
 		/**
@@ -324,8 +323,7 @@ app.post('/api/assignjudges', async (req, res) => {
 				 * loops through the categories of each project
 				 */
 				let currCat = categories[j]
-
-				if (currCat.slice(0, 3) === 'GC:') {
+				if (currCat === 'General Category' || !(currCat in apiMappings)) {
 					/**
 					 * check if category is a general category
 					 * assigns the category JSON key accordingly

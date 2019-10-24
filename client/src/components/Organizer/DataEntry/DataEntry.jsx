@@ -95,26 +95,36 @@ class DataEntry extends Component {
     let length;
     const apiRaw = [];
     if (this.state.projectsReader != null) {
-      results = Papa.parse(this.state.projectsReader.result);
+      results = Papa.parse(this.state.projectsReader.result, { skipEmptyLines: 'greedy' });
       length = results.data.length;
 
       for (let i = 1; i < length; i += 1) {
         const projectDict = {};
-        const categories = [];
+        let categories = [];
         for (let n = 0; n < results.data[0].length; n += 1) {
           const key = results.data[0][n];
           const value = results.data[i][n];
           if (key === 'Submission Title' || key === 'Submission Url') {
             projectDict[key] = value;
           }
-          if (key.substring(0, 3) === 'API' || key.substring(0, 2) === 'GC') {
-            if (value !== 'FALSE') {
-              categories.push(key);
-            }
-            if (!apiRaw.includes(key)) {
-              apiRaw.push(key);
+
+          if (key === 'Desired Prizes') {
+            categories = value.split(', ').filter(s => s.trim())
+
+            for (let category of categories) {
+              if (!apiRaw.includes(category)) {
+                apiRaw.push(category)
+              }
             }
           }
+          // if (key.substring(0, 3) === 'API' || key.substring(0, 2) === 'GC') {
+          //   if (value !== 'FALSE') {
+          //     categories.push(key);
+          //   }
+          //   if (!apiRaw.includes(key)) {
+          //     apiRaw.push(key);
+          //   }
+          // }
         }
         projectDict.Categories = categories;
         list[i] = projectDict;
@@ -123,7 +133,7 @@ class DataEntry extends Component {
 
     let apiFinal = [];
     for (let i = 0; i < apiRaw.length; i++) {
-      if (apiRaw[i].substring(0, 3) === 'API') {
+      if (apiRaw[i].includes('API')) {
         apiFinal.push(['API', apiRaw[i]]);
       } else {
         apiFinal.push(['GC', apiRaw[i]]);

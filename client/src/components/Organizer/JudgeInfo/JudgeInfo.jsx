@@ -210,7 +210,7 @@ class JudgeInfo extends Component {
   render() {
     const defaultOption = this.state.selected;
     const info = (this.state.info || []).map((name, index) => (
-      <ul className="judge-item">
+      <ul className="judge-item" key={name[0]}>
         <div className="delete-button">
           <button
             name="removeTask"

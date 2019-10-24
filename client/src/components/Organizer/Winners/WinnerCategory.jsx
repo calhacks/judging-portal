@@ -15,7 +15,7 @@ class WinnerCategory extends Component {
         const listOfWinners = [];
         for (let i = 0; i < projects.length; i += 1) {
             const currProj = projects[i];
-            listOfWinners.push(<WinnerCategoryItem rank={i+1} name={currProj.projectname} score={currProj.score} judge={currProj.judgename} />);
+            listOfWinners.push(<WinnerCategoryItem key={currProj.projectname} rank={i+1} name={currProj.projectname} score={currProj.score} judge={currProj.judgename} />);
         }
 
         this.setState({

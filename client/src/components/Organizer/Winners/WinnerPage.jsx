@@ -77,6 +77,7 @@ class WinnerPage extends Component {
       allCategories.push(
         <WinnerCollapsible
           index={i}
+          key={currCatName}
           flipButtonUp={this.flipButtonUp}
           flipButtonDown={this.flipButtonDown}
           name={currCatName}

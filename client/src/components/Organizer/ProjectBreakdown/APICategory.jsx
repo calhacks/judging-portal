@@ -33,7 +33,7 @@ class APICategory extends Component {
       let currentProj;
       for (let i = 0; i < unscoreddata.length; i += 1) {
         currentProj = unscoreddata[i]
-        unscored.push(<CategoryItem name={currentProj[0]} score={null} />);
+        unscored.push(<CategoryItem name={currentProj[0]} key={currentProj[0]} score={null} />);
       }
     }
 
