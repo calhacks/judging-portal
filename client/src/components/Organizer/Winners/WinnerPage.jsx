@@ -99,6 +99,15 @@ class WinnerPage extends Component {
         </div>
         <div className="w-content-background">
           <div className="all-collapsible-categories">{allCategories}</div>
+          <div className="links">
+            <Link
+              className="nav prev"
+              to="/hacker-spreadsheet"
+              onClick={this.routeToPrev}
+            >
+              &#60; HACKER SPREADSHEET
+            </Link>
+          </div>
         </div>
       </div>
     );

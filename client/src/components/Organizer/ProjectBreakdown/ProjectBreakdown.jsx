@@ -9,7 +9,7 @@ class ProjectBreakdown extends Component {
     super(props);
     this.state = {
       projectsJson: {},
-      keys: [],
+      keys: null,
       buttons: []
     };
     this.routeToPrev = this.routeToPrev.bind(this);
@@ -37,30 +37,48 @@ class ProjectBreakdown extends Component {
       );
     }
 
+    let proms = [];
+
     const projects = await this.getProjects();
     for (let j = 0; j < projects.length; j += 1) {
-      const projectid = projects[j].projectid;
-      const scores = await this.getScores(projectid);
-      for (let k = 0; k < scores.length; k += 1) {
-        const n = await this.getName(projectid);
-        const judgeid = scores[k].judgeid;
-        const projectName = n[0].name;
-        const category = scores[k].category;
-        const judge = await this.getJudge(judgeid);
-        const judgeName = judge[0].name;
-        if (projectsJson[category]) {
-          if (scores[k].score) {
-            projectsJson[category].scored.push([
-              projectName,
-              judgeName,
-              scores[k].score
-            ]);
-          } else {
-            projectsJson[category].unscored.push([projectName, judgeName]);
+      proms.push(
+        new Promise(async (res, rej) => {
+          const projectid = projects[j].projectid;
+          const scores = await this.getScores(projectid);
+
+          let innerProms = [];
+          for (let k = 0; k < scores.length; k += 1) {
+            innerProms.push(
+              new Promise(async (res, rej) => {
+                const judgeid = scores[k].judgeid;
+                const projectName = projects[j].name;
+                const category = scores[k].category;
+                const judge = await this.getJudge(judgeid);
+                const judgeName = judge[0].name;
+                if (projectsJson[category]) {
+                  if (scores[k].score) {
+                    projectsJson[category].scored.push([
+                      projectName,
+                      judgeName,
+                      scores[k].score
+                    ]);
+                  } else {
+                    projectsJson[category].unscored.push([
+                      projectName,
+                      judgeName
+                    ]);
+                  }
+                }
+                res();
+              })
+            );
           }
-        }
-      }
+          await Promise.all(innerProms)
+          res();
+        })
+      );
     }
+    await Promise.all(proms);
 
     this.setState({
       projectsJson: projectsJson,
@@ -152,7 +170,7 @@ class ProjectBreakdown extends Component {
   render() {
     const projects = this.state.projectsJson;
     const keys = this.state.keys;
-    if (this.state.keys.length === 0) {
+    if (this.state.keys === null) {
       return (
         <div className="page-background" id="projBreakdown">
           <div className="page-header">
@@ -211,13 +229,13 @@ class ProjectBreakdown extends Component {
           <div className="links">
             <Link
               className="nav prev"
-              to="/hacker-spreadsheet"
+              to="/judge-info"
               onClick={this.routeToPrev}
             >
-              &#60; DATA ENTRY
+              &#60; JUDGE INFO
             </Link>
-            <Link className="nav next" to="/winners" onClick={this.routeToNext}>
-              WINNERS >
+            <Link className="nav next" to="/hacker-spreadsheet" onClick={this.routeToNext}>
+              HACKER SPREADSHEET >
             </Link>
           </div>
         </div>

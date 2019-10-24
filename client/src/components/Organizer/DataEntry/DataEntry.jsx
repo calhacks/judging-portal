@@ -212,7 +212,7 @@ class DataEntry extends Component {
     let tableLength;
 
     if (this.state.tablesReader != null) {
-      results = Papa.parse(this.state.tablesReader.result);
+      results = Papa.parse(this.state.tablesReader.result, { skipEmptyLines: 'greedy'});
       list = results.data;
       tableLength = list.length;
     }
