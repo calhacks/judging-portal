@@ -20,14 +20,14 @@ class PerCategory extends Component {
                         <input type="score"
                             keyboardType="phone-pad"
                             className="score-input"
-                            placeholder="+"
+                            placeholder="_"
                             onChange={this.handleScore}
                         >
                         </input> :
                         <input type="score"
                             keyboardType="phone-pad"
                             className="score-input"
-                            placeholder={this.props.score}
+                            placeholder={this.props.score || '_'}
                             onChange={this.handleScore}
                         >
                         </input>

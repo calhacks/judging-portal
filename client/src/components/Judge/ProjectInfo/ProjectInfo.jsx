@@ -120,6 +120,22 @@ class ProjectInfo extends Component {
         <div className="info-and-scores">
           <div className="proj-info">
             <div className="proj-details">
+            <div className="attribute-item">
+                <div className="head-and-icon">
+                  <img
+                    className="projinfo-icon"
+                    src={tableIcon}
+                    alt="table icon"
+                  ></img>
+                  <h className="detail-header">TABLE</h>
+                </div>
+                <p className="actual-info">
+                  {this.props.location.state.tablename}
+                </p>
+              </div>
+              
+              <br/>
+
               <div className="attribute-item">
                 <div className="head-and-icon">
                   <img
@@ -146,20 +162,6 @@ class ProjectInfo extends Component {
                   <h className="detail-header">API</h>
                 </div>
                 <p className="actual-info">{cat}</p>
-              </div>
-
-              <div className="attribute-item">
-                <div className="head-and-icon">
-                  <img
-                    className="projinfo-icon"
-                    src={tableIcon}
-                    alt="table icon"
-                  ></img>
-                  <h className="detail-header">TABLE</h>
-                </div>
-                <p className="actual-info">
-                  {this.props.location.state.tablename}
-                </p>
               </div>
             </div>
           </div>

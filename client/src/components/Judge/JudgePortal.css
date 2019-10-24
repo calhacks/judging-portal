@@ -216,7 +216,7 @@ p {
     display: flex;
     justify-content: flex-end;
     padding-left: 5%;
-    margin-bottom: 6%;
+    /* margin-bottom: 6%; */
 }
 
 .head-and-icon {
